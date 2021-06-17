@@ -1,0 +1,22 @@
+{
+  "name": "@timfish/forge-externals-plugin",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test-app && npm i && npm run start && npm run package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timfish/forge-externals-plugin.git"
+  },
+  "author": "Tim Fish <tim@timfish.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timfish/forge-externals-plugin/issues"
+  },
+  "homepage": "https://github.com/timfish/forge-externals-plugin#readme",
+  "dependencies": {
+    "flora-colossus": "1.0.1"
+  }
+}
