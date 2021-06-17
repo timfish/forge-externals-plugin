@@ -25,7 +25,10 @@ class ForgeExternalsPlugin {
         );
 
         const walker = new Walker(moduleRoot);
-        (await walker.walkTree())
+        // These are private so it's quite nasty!
+        walker.modules = [];
+        await walker.walkDependenciesForModule(moduleRoot, DepType.PROD);
+        walker.modules
           .filter((dep) => dep.nativeModuleType === DepType.PROD)
           .map((dep) => dep.name)
           .forEach((name) => this._modules.add(name));
