@@ -15,25 +15,8 @@ class ForgeExternalsPlugin {
     this._includeDeps = options.includeDeps;
   }
 
-  init = async (dir) => {
-    this._modules = new Set(this._externals);
-
-    if (this._includeDeps) {
-      for (const external of this._externals) {
-        const moduleRoot = dirname(
-          require.resolve(`${external}/package.json`, { paths: [dir] })
-        );
-
-        const walker = new Walker(moduleRoot);
-        // These are private so it's quite nasty!
-        walker.modules = [];
-        await walker.walkDependenciesForModule(moduleRoot, DepType.PROD);
-        walker.modules
-          .filter((dep) => dep.nativeModuleType === DepType.PROD)
-          .map((dep) => dep.name)
-          .forEach((name) => this._modules.add(name));
-      }
-    }
+  init = (dir) => {
+    this._dir = dir;
   };
 
   getHook(hookName) {
@@ -44,6 +27,25 @@ class ForgeExternalsPlugin {
   }
 
   resolveForgeConfig = async (forgeConfig) => {
+    const foundModules = new Set(this._externals);
+
+    if (this._includeDeps) {
+      for (const external of this._externals) {
+        const moduleRoot = dirname(
+          require.resolve(`${external}/package.json`, { paths: [this._dir] })
+        );
+
+        const walker = new Walker(moduleRoot);
+        // These are private so it's quite nasty!
+        walker.modules = [];
+        await walker.walkDependenciesForModule(moduleRoot, DepType.PROD);
+        walker.modules
+          .filter((dep) => dep.nativeModuleType === DepType.PROD)
+          .map((dep) => dep.name)
+          .forEach((name) => foundModules.add(name));
+      }
+    }
+
     // The webpack plugin already sets the ignore function.
     const existingIgnoreFn = forgeConfig.packagerConfig.ignore;
 
@@ -59,7 +61,7 @@ class ForgeExternalsPlugin {
         return false;
       }
 
-      for (const module of this._modules) {
+      for (const module of foundModules) {
         if (file.startsWith(`/node_modules/${module}`)) {
           return false;
         }
