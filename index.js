@@ -62,7 +62,7 @@ class ForgeExternalsPlugin {
       }
 
       for (const module of foundModules) {
-        if (file.startsWith(`/node_modules/${module}`)) {
+        if (file.startsWith(`/node_modules/${module}`) || file.startsWith(`/node_modules/${module.split('/')[0]}`)) {
           return false;
         }
       }
