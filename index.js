@@ -26,6 +26,12 @@ class ForgeExternalsPlugin {
     }
   }
 
+  getHooks() {
+    return {
+      "resolveForgeConfig": this.resolveForgeConfig
+    };
+  }
+
   resolveForgeConfig = async (forgeConfig) => {
     const foundModules = new Set(this._externals);
 
