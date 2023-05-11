@@ -46,7 +46,6 @@ class ForgeExternalsPlugin {
         walker.modules = [];
         await walker.walkDependenciesForModule(moduleRoot, DepType.PROD);
         walker.modules
-          .filter((dep) => dep.nativeModuleType === DepType.PROD)
           .map((dep) => dep.name)
           .forEach((name) => foundModules.add(name));
       }
